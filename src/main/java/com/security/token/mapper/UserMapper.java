@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
  * @author Think
  * @Title: UserMapper
  * @ProjectName token-authentication
- * @Description: TODO
+ * @Description: user字段映射
  * @date 2019/1/1823:04
  */
 

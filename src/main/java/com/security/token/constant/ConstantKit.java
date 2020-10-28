@@ -3,9 +3,9 @@ package com.security.token.constant;
 /**
  * @author : OlinH
  * @version : v1.0
- * @className : TODO
+ * @className : ConstantKit
  * @packageName : com.security.token.constant
- * @description : TODO
+ * @description : 常量类
  * @since : 2020/10/27
  */
 public final class ConstantKit {

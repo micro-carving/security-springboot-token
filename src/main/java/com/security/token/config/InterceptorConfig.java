@@ -1,6 +1,7 @@
 package com.security.token.config;
 
 import com.security.token.interceptor.AuthenticationInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -15,15 +16,12 @@ import javax.annotation.Resource;
 /**
  * @author : OlinH
  * @version : v1.0
- * @className : TODO
+ * @className : InterceptorConfig
  * @packageName : com.security.token.config
- * @description : TODO
+ * @description : 拦截器配置
  * @since : 2020/10/26
  */
 @Configuration
-@EnableWebMvc
-@ComponentScan(basePackages = "com.security.token"
-        , includeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Controller.class)})
 public class InterceptorConfig implements WebMvcConfigurer {
 
     @Resource
@@ -40,12 +38,17 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 为视图添加拦截器
+     * 为视图添加拦截器，拦截所有请求
      *
      * @param registry 视图拦截器注册中心
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor).addPathPatterns("/r/**");
+    }
+
+    @Bean
+    public AuthenticationInterceptor authenticationInterceptor() {
+        return new AuthenticationInterceptor();
     }
 }

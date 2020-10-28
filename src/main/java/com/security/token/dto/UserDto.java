@@ -17,7 +17,7 @@ public class UserDto extends User {
     /**
      * 用户对应的session键
      */
-    public static final String SESSION_USER_KEY = "_user";
+    public static final String REQUEST_USER_KEY = "_user";
 
     public UserDto(String id, String userName, String password, String fullName, String mobile, Set<String> authorities) {
         super(id, userName, password, fullName, mobile, authorities);

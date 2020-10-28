@@ -1,15 +1,22 @@
 package com.security.token.controller;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.json.JSONUtil;
+import com.security.token.annotation.AuthToken;
+import com.security.token.annotation.PassToken;
 import com.security.token.dto.UserDto;
 import com.security.token.entity.UserAuthenticationRequest;
 import com.security.token.service.AuthenticationService;
+import com.security.token.utils.TokenGenerator;
+import com.security.token.utils.TokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * @author : OlinH
@@ -24,48 +31,38 @@ public class LoginController {
 
     @Resource
     AuthenticationService authenticationService;
+    @Resource
+    TokenGenerator<UserDto> tokenGenerator;
 
     /**
      * 登录
      *
-     * @param userAuthenticationRequest ：用户登录认证请求
-     * @param httpSession               ：session对象
-     * @return {String}
+     * @param userAuthenticationRequest : 认证请求实体
+     * @return : {String}
      */
-    @RequestMapping(value = "/login", produces = {"text/plain;charset=utf-8"})
-    public String login(UserAuthenticationRequest userAuthenticationRequest, HttpSession httpSession) {
+    @PostMapping(value = "/login")
+    public String login(@RequestBody UserAuthenticationRequest userAuthenticationRequest) {
+        Map<String, Object> map = MapUtil.newHashMap();
         // 用户认证
         final UserDto userDto = authenticationService.userAuthentication(userAuthenticationRequest);
-        // 保存session
-        httpSession.setAttribute(UserDto.SESSION_USER_KEY, userDto);
-        // 设置session存活时间为30秒
-        httpSession.setMaxInactiveInterval(30);
-        return userDto.getUserName() + "登录成功！";
-    }
-
-    /**
-     * 注销
-     *
-     * @param session ：session对象
-     * @return {String}
-     */
-    @GetMapping(value = "/logout", produces = {"text/plain;charset=UTF-8"})
-    public String logout(HttpSession session) {
-        // 退出之后清空session
-        session.invalidate();
-        return "退出成功";
+        // 生成token
+        String token = tokenGenerator.getTokenByJwt(userDto);
+        map.put("token", token);
+        map.put("message", userDto.getUserName() + "登录成功！");
+        return JSONUtil.toJsonStr(map);
     }
 
     /**
      * 资源 r1
      *
-     * @param session ：session对象
+     * @param request ：request对象
      * @return {String}
      */
-    @GetMapping(value = "/r/r1", produces = {"text/plain;charset=UTF-8"})
-    public String r1(HttpSession session) {
+    @AuthToken
+    @GetMapping(value = "/r/r1")
+    public String r1(HttpServletRequest request) {
         String fullName;
-        Object object = session.getAttribute(UserDto.SESSION_USER_KEY);
+        Object object = request.getAttribute(UserDto.REQUEST_USER_KEY);
         if (ObjectUtils.isEmpty(object)) {
             fullName = "匿名";
         } else {
@@ -77,18 +74,29 @@ public class LoginController {
     /**
      * 资源 r2
      *
-     * @param session ：session对象
+     * @param request ：request对象
      * @return {String}
      */
-    @GetMapping(value = "/r/r2", produces = {"text/plain;charset=UTF-8"})
-    public String r2(HttpSession session) {
+    @GetMapping(value = "/r/r2")
+    public String r2(HttpServletRequest request) {
         String fullName;
-        Object object = session.getAttribute(UserDto.SESSION_USER_KEY);
+        Object object = request.getAttribute(UserDto.REQUEST_USER_KEY);
         if (ObjectUtils.isEmpty(object)) {
             fullName = "匿名";
         } else {
             fullName = ((UserDto) object).getFullName();
         }
         return fullName + "访问资源2";
+    }
+
+    /**
+     * 显示通过验证的信息
+     *
+     * @return {String}
+     */
+    @PassToken
+    @GetMapping("/getMessage")
+    public String getMessage(){
+        return "你已通过验证";
     }
 }

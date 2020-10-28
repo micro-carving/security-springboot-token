@@ -46,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param userName ：账号
      * @return {用户数据传输实体}
      */
-    private UserDto getUserDto(String userName) {
+    public UserDto getUserDto(String userName) {
         return userDtoMap.get(userName);
     }
 

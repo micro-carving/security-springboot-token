@@ -3,14 +3,14 @@ package com.security.token.utils;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.security.token.dto.UserDto;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -62,7 +62,7 @@ public class TokenUtil implements TokenGenerator<UserDto> {
      */
     @Override
     public String getTokenByJwt(UserDto user) {
-        String token = "";
+        String token;
         // 过期时间
         final Date date = new Date(TIME_STAMP + EXPIRE_TIME);
         // 私钥及加密算法
@@ -80,5 +80,28 @@ public class TokenUtil implements TokenGenerator<UserDto> {
                 .withExpiresAt(date)
                 .sign(algorithm);
         return token;
+    }
+
+    /**
+     * 校验token是否正确
+     *
+     * @param token   ：token密钥
+     * @param userDto ：加密的数据对象
+     * @return {false|true}
+     */
+    public static boolean verification(String token, UserDto userDto) {
+        try {
+            // 解密中所使用的算法
+            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            // jwt验证器
+            JWTVerifier jwtVerifier = JWT.require(algorithm).build();
+            // 验证token
+            final DecodedJWT decodedJwt = jwtVerifier.verify(token);
+            // 获取解密之后的数据
+            final Claim authorities = decodedJwt.getClaim("authorities");
+            return authorities.asString().equals(userDto.getAuthorities().toString());
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

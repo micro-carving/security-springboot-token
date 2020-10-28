@@ -19,15 +19,14 @@ import javax.annotation.Resource;
 /**
  * @author : OlinH
  * @version : v1.0
- * @className : TODO
+ * @className : WelcomeController
  * @packageName : com.security.token.controller
- * @description : TODO
- * @since : 2020/10/27
+ * @description : 欢迎页控制器
+ * @since : 2020/10/29
  */
 @Slf4j
 @RestController
-class WelcomeController {
-
+public class WelcomeController {
     @Resource
     TokenGenerator tokenGenerator;
 
@@ -35,18 +34,18 @@ class WelcomeController {
     UserMapper userMapper;
 
     @GetMapping("/welcome")
-    public String welcome(){
+    public String welcome() {
         return "welcome token authentication";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseTemplate login(String username, String password) {
 
-        log.info("username:"+username+"      password:"+password);
+        log.info("username:" + username + "      password:" + password);
 
-        User user = userMapper.getUser(username,password);
+        User user = userMapper.getUser(username, password);
 
-        log.info("user:"+user);
+        log.info("user:" + user);
 
         JSONObject result = new JSONObject();
         if (user != null) {

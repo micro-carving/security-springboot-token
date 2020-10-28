@@ -19,9 +19,9 @@ import java.lang.reflect.Method;
 /**
  * @author : OlinH
  * @version : v1.0
- * @className : TODO
+ * @className : ManualAuthorizationInterceptor
  * @packageName : com.security.token.interceptor
- * @description : TODO
+ * @description : 手动生成token权限拦截器
  * @since : 2020/10/27
  */
 @Slf4j

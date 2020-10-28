@@ -8,18 +8,13 @@ import java.lang.annotation.Target;
 /**
  * @author : OlinH
  * @version : v1.0
- * @className : AuthToken
+ * @className : PassToken
  * @packageName : com.security.token.annotation
- * @description : 用来认证的token注解
- * @since : 2020/10/26
+ * @description : 认证通过注解
+ * @since : 2020/10/28
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AuthToken {
-    /**
-     * 是否必须
-     *
-     * @return {true(default)|false}
-     */
+public @interface PassToken {
     boolean required() default true;
 }
