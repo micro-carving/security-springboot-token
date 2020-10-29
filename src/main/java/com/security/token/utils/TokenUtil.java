@@ -8,6 +8,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.security.token.dto.UserDto;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.util.Date;
@@ -21,6 +23,7 @@ import java.util.Map;
  * @description : token工具类
  * @since : 2020/10/26
  */
+@Service
 public class TokenUtil implements TokenGenerator<UserDto> {
     /**
      * 过期时间为15分钟

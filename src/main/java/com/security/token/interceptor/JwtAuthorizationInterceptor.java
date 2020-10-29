@@ -15,6 +15,7 @@ import com.security.token.service.impl.AuthenticationServiceImpl;
 import com.security.token.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -50,11 +51,8 @@ public class JwtAuthorizationInterceptor implements HandlerInterceptor {
         // 检查是否有PassToken注解，有则跳过认证
         if (method.isAnnotationPresent(PassToken.class)) {
             final PassToken passToken = method.getAnnotation(PassToken.class);
-            if (passToken.required()) {
-                return true;
-            }
+            return passToken.required();
         }
-
         // 检查是否有AuthToken注解
         if (method.isAnnotationPresent(AuthToken.class)) {
             final AuthToken authToken = method.getAnnotation(AuthToken.class);

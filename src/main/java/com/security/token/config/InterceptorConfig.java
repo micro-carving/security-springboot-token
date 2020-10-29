@@ -1,6 +1,7 @@
 package com.security.token.config;
 
 import com.security.token.interceptor.AuthenticationInterceptor;
+import com.security.token.interceptor.JwtAuthorizationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ import javax.annotation.Resource;
 public class InterceptorConfig implements WebMvcConfigurer {
 
     @Resource
-    AuthenticationInterceptor authenticationInterceptor;
+    JwtAuthorizationInterceptor jwtAuthorizationInterceptor;
 
     /**
      * 为视图添加对应的控制器
@@ -44,11 +45,16 @@ public class InterceptorConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/r/**");
+        registry.addInterceptor(jwtAuthorizationInterceptor).addPathPatterns("/r/**");
     }
 
+    /**
+     * 此方式是将拦截器对象注入进来，不需要在来拦截器上配置@Component注解
+     *
+     * @return JwtAuthorizationInterceptor
+     */
     @Bean
-    public AuthenticationInterceptor authenticationInterceptor() {
-        return new AuthenticationInterceptor();
+    public JwtAuthorizationInterceptor jwtAuthorizationInterceptor() {
+        return new JwtAuthorizationInterceptor();
     }
 }

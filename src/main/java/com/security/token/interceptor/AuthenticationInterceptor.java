@@ -17,7 +17,7 @@ import java.io.PrintWriter;
  * @description : 身份认证拦截器
  * @since : 2020/10/25
  */
-@Component
+//@Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     /**
@@ -32,7 +32,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 读取会话信息
-        final Object attribute = request.getSession().getAttribute(UserDto.SESSION_USER_KEY);
+        final Object attribute = request.getSession().getAttribute(UserDto.REQUEST_USER_KEY);
         if (attribute == null) {
             this.responseContent(response, "请登录！", HttpServletResponse.SC_SEE_OTHER);
             return false;

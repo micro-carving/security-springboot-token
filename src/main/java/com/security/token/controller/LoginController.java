@@ -1,7 +1,9 @@
 package com.security.token.controller;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.auth0.jwt.JWT;
 import com.security.token.annotation.AuthToken;
 import com.security.token.annotation.PassToken;
 import com.security.token.dto.UserDto;
@@ -11,6 +13,7 @@ import com.security.token.utils.TokenGenerator;
 import com.security.token.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -55,20 +58,19 @@ public class LoginController {
     /**
      * 资源 r1
      *
-     * @param request ：request对象
+     * @param token ：request对象
      * @return {String}
      */
     @AuthToken
     @GetMapping(value = "/r/r1")
-    public String r1(HttpServletRequest request) {
-        String fullName;
-        Object object = request.getAttribute(UserDto.REQUEST_USER_KEY);
-        if (ObjectUtils.isEmpty(object)) {
-            fullName = "匿名";
+    public String r1(@RequestParam String token) {
+        String userName;
+        if (StrUtil.isEmpty(token)) {
+            userName = "匿名";
         } else {
-            fullName = ((UserDto) object).getFullName();
+            userName = JWT.decode(token).getClaim("userName").asString();
         }
-        return fullName + "访问资源r1";
+        return userName + "访问资源r1";
     }
 
     /**
@@ -94,9 +96,14 @@ public class LoginController {
      *
      * @return {String}
      */
-    @PassToken
+    @PassToken(required = false)
     @GetMapping("/getMessage")
-    public String getMessage(){
-        return "你已通过验证";
+    public String getMessage(@RequestParam String token, UserAuthenticationRequest userAuthenticationRequest){
+        final String userName = JWT.decode(token).getClaim("userName").asString();
+        String userName1 = userAuthenticationRequest.getUserName();
+        if (StrUtil.equals(userName, userName1)) {
+            return userName + " 已通过验证";
+        }
+        return "验证未通过";
     }
 }

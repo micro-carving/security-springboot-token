@@ -25,7 +25,7 @@ import javax.annotation.Resource;
  * @since : 2020/10/29
  */
 @Slf4j
-@RestController
+//@RestController
 public class WelcomeController {
     @Resource
     TokenGenerator tokenGenerator;
@@ -40,13 +40,9 @@ public class WelcomeController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseTemplate login(String username, String password) {
-
         log.info("username:" + username + "      password:" + password);
-
         User user = userMapper.getUser(username, password);
-
         log.info("user:" + user);
-
         JSONObject result = new JSONObject();
         if (user != null) {
 
@@ -59,10 +55,8 @@ public class WelcomeController {
             jedis.expire(token, ConstantKit.TOKEN_EXPIRE_TIME);
             long currentTime = System.currentTimeMillis();
             jedis.set(token + username, Long.toString(currentTime));
-
             //用完关闭
             jedis.close();
-
             result.put("status", "登录成功");
             result.put("token", token);
         } else {
