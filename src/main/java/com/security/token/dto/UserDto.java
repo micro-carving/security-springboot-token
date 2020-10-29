@@ -3,6 +3,7 @@ package com.security.token.dto;
 
 import com.security.token.entity.User;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,6 +15,8 @@ import java.util.Set;
  * @since : 2020/10/25
  */
 public class UserDto extends User {
+    private Map<String, Object> data;
+    private String message;
     /**
      * 用户对应的session键
      */

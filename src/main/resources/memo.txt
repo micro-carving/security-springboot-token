@@ -1,0 +1,6 @@
+参考地址1：https://www.jianshu.com/p/e88d3f8151db
+参考地址2：https://www.jianshu.com/p/4a124a10fcaf
+参考地址3：https://blog.csdn.net/qq_42077317/article/details/107955524?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~sobaiduend~default-1-107955524.nonecase&utm_term=springboot%E5%9F%BA%E4%BA%8Etoken%E9%AA%8C%E8%AF%81&spm=1000.2123.3001.4430
+参考地址4：https://blog.csdn.net/zxd1435513775/article/details/86555130?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-4-86555130.nonecase&utm_term=springboot%E5%9F%BA%E4%BA%8Etoken%E9%AA%8C%E8%AF%81&spm=1000.2123.3001.4430
+参考地址5：https://www.cnblogs.com/shihaiming/p/9565835.html
+参考地址6：https://blog.csdn.net/Eye_Me/article/details/88720585
