@@ -1,17 +1,18 @@
 package com.security.token.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
+ * 认证请求实体
+ *
  * @author : OlinH
  * @version : v1.0
- * @className : AuthenticationRequest
- * @packageName : com.security.session.entity
- * @description : 认证请求实体
  * @since : 2020/10/25
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserAuthenticationRequest {
+public class UserAuthenticationRequest extends BaseEntity{
 
     /**
      * 用户名

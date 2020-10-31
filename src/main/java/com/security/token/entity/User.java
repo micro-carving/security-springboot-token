@@ -2,26 +2,23 @@ package com.security.token.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * 用户实体
+ *
  * @author : OlinH
  * @version : v1.0
- * @className : User
- * @packageName : com.security.session.entity
- * @description : 用户实体
  * @since : 2020/10/25
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-public class User implements Serializable {
+public class User extends BaseEntity {
 
-    /**
-     * 编号
-     */
-    private String id;
     /**
      * 账号
      */

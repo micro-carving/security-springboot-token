@@ -6,27 +6,20 @@ import cn.hutool.json.JSONUtil;
 import com.auth0.jwt.JWT;
 import com.security.token.annotation.AuthToken;
 import com.security.token.annotation.PassToken;
-import com.security.token.dto.UserDto;
+import com.security.token.entity.User;
 import com.security.token.entity.UserAuthenticationRequest;
 import com.security.token.service.AuthenticationService;
 import com.security.token.utils.TokenGenerator;
-import com.security.token.utils.TokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
+ * 登录控制器
+ *
  * @author : OlinH
  * @version : v1.0
- * @className : LoginController
- * @packageName : com.security.session.controller
- * @description : 登录控制器
  * @since : 2020/10/25
  */
 @RestController
@@ -35,7 +28,7 @@ public class LoginController {
     @Resource
     AuthenticationService authenticationService;
     @Resource
-    TokenGenerator<UserDto> tokenGenerator;
+    TokenGenerator<User> tokenGenerator;
 
     /**
      * 登录
@@ -47,11 +40,12 @@ public class LoginController {
     public String login(@RequestBody UserAuthenticationRequest userAuthenticationRequest) {
         Map<String, Object> map = MapUtil.newHashMap();
         // 用户认证
-        final UserDto userDto = authenticationService.userAuthentication(userAuthenticationRequest);
+        Map<String, Object> authenticationMap = authenticationService.userAuthentication(userAuthenticationRequest);
+        User user = (User) authenticationMap.get("userData");
         // 生成token
-        String token = tokenGenerator.getTokenByJwt(userDto);
+        String token = tokenGenerator.getTokenByJwt(user);
         map.put("token", token);
-        map.put("message", userDto.getUserName() + "登录成功！");
+        map.put("message", user.getUserName() + "登录成功！");
         return JSONUtil.toJsonStr(map);
     }
 
@@ -73,23 +67,6 @@ public class LoginController {
         return userName + "访问资源r1";
     }
 
-    /**
-     * 资源 r2
-     *
-     * @param request ：request对象
-     * @return {String}
-     */
-    @GetMapping(value = "/r/r2")
-    public String r2(HttpServletRequest request) {
-        String fullName;
-        Object object = request.getAttribute(UserDto.REQUEST_USER_KEY);
-        if (ObjectUtils.isEmpty(object)) {
-            fullName = "匿名";
-        } else {
-            fullName = ((UserDto) object).getFullName();
-        }
-        return fullName + "访问资源2";
-    }
 
     /**
      * 显示通过验证的信息
@@ -98,7 +75,7 @@ public class LoginController {
      */
     @PassToken(required = false)
     @GetMapping("/getMessage")
-    public String getMessage(@RequestParam String token, UserAuthenticationRequest userAuthenticationRequest){
+    public String getMessage(@RequestParam String token, UserAuthenticationRequest userAuthenticationRequest) {
         final String userName = JWT.decode(token).getClaim("userName").asString();
         String userName1 = userAuthenticationRequest.getUserName();
         if (StrUtil.equals(userName, userName1)) {
